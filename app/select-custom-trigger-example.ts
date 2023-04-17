@@ -13,7 +13,7 @@ import { map, startWith } from 'rxjs/operators';
 export class SelectCustomTriggerExample {
 
   @ViewChild('search') searchTextBox: ElementRef;
-  @ViewChild('mySel') skillSel: MatSelect;
+  @ViewChild('mySel') skillSel: MatSelect;  
 
   config = {
     inputPlaceholder: 'Selecionar propriedade(s)',
@@ -25,8 +25,8 @@ export class SelectCustomTriggerExample {
   searchTextboxControl = new FormControl();
   selectedValues = [];
   selectAll: boolean
-  data = [
-    { id: 0, name: 'SELECIONAR TODAS' },
+  data = [    
+    { id: 0, name: 'Selecionar todas' },
     { id: 1, name: 'Hotel Hangar' },
     { id: 2, name: 'Hotel Floph' },
     { id: 3, name: 'Novo Vernon Hotel' }
@@ -43,8 +43,7 @@ export class SelectCustomTriggerExample {
   }
   
   private _filter(name: string){
-    const filterValue = name.toLowerCase();    
-    this.setSelectedValues();
+    const filterValue = name.toLowerCase();        
     this.selectFormControl.patchValue(this.selectedValues);
     let filteredList = this.data.filter(option => option.name.toLowerCase().includes(filterValue));
     return filteredList;
@@ -59,40 +58,50 @@ export class SelectCustomTriggerExample {
         return `${this.selectedValues[0].name} +${this.selectedValues.length - 1}`;
 }
 
- selectionChange(event) {
+ selectionChange(event) {     
   if (!event.isUserInput)
       return;
+
   let id = event.source.value.id;
+
   if (id == 0) {
       if (!this.selectAll) {
           this.selectAll = true;
           this.selectedValues = [];
-          this.selectedValues.push(...this.data.filter(x => x.id != 0));
+          this.selectedValues.push(...this.data);
           this.skillSel.options.forEach((item) => item.select());
       }
-      else {
+      else {         
           this.selectAll = false;
           this.selectedValues = [];
           this.skillSel.options.forEach((item) => { item.deselect(); });
       }
       return;
   }
+
   let indexList = this.selectedValues.indexOf(event.source.value);
+  
   if (indexList == -1)
       this.selectedValues.push(event.source.value);
   else
       this.selectedValues.splice(indexList, 1);
+
+
   if (this.selectedValues.filter(x => x.id != 0).length == this.data.length - 1) {
       this.skillSel.options.first.select();
       this.selectAll = true;
-  }
-  else {
+      this.selectedValues.push(this.data[0]);
+  }else {
       this.selectAll = false;
-      this.skillSel.options.first.deselect();
+      this.skillSel.options.first.deselect();  
+      let indexSelectAll = this.selectedValues.findIndex(x => x.id == 0)
+
+      if(indexSelectAll != -1)
+        this.selectedValues.splice(indexSelectAll, 1)
   }
 }
 
-  openedChange(e) {    
+  openedChange(e) {            
     this.searchTextboxControl.patchValue('');    
     if (e == true) {
       this.searchTextBox.nativeElement.focus();
@@ -102,16 +111,5 @@ export class SelectCustomTriggerExample {
   clearSearch(event) {
     event.stopPropagation();
     this.searchTextboxControl.patchValue('');
-  }
-  
-  setSelectedValues() {
-    console.log('selectFormControl', this.selectFormControl.value);
-    if (this.selectFormControl.value && this.selectFormControl.value.length > 0) {
-      this.selectFormControl.value.forEach((e) => {
-        if (this.selectedValues.indexOf(e) == -1) {
-          this.selectedValues.push(e);
-        }
-      });
-    }
   }
 }
