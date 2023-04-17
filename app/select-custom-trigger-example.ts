@@ -15,6 +15,12 @@ export class SelectCustomTriggerExample {
   @ViewChild('search') searchTextBox: ElementRef;
   @ViewChild('mySel') skillSel: MatSelect;
 
+  config = {
+    inputPlaceholder: 'Selecionar propriedade(s)',
+    inputSearch: 'Buscar propriedades',
+    notFound: 'Nenhuma propriedade encontrada'
+  }
+
   selectFormControl = new FormControl();
   searchTextboxControl = new FormControl();
   selectedValues = [];
@@ -36,12 +42,11 @@ export class SelectCustomTriggerExample {
       );
   }
   
-  private _filter(name: string): String[] {
+  private _filter(name: string){
     const filterValue = name.toLowerCase();    
     this.setSelectedValues();
     this.selectFormControl.patchValue(this.selectedValues);
-    let filteredList = this.data.filter(option => option.name.toLowerCase().includes(filterValue) ||
-    option.doc.toLowerCase().includes(filterValue));
+    let filteredList = this.data.filter(option => option.name.toLowerCase().includes(filterValue));
     return filteredList;
   }
 
