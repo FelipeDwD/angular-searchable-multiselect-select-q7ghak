@@ -1,24 +1,46 @@
-<mat-form-field style="min-width: 500px">
-	<mat-select #mySel (openedChange)="openedChange($event)" [placeholder]="config.inputPlaceholder" [formControl]="selectFormControl" multiple>
-		<mat-select-trigger>
-			 {{ getSelectedsInfo() }}			
-    </mat-select-trigger>
+<mat-form-field style="min-width: 250px">
+  <mat-select
+    #mySel
+    (openedChange)="openedChange($event)"
+    [placeholder]="config.inputPlaceholder"
+    [formControl]="selectFormControl"
+    multiple
+  >
+    <mat-select-trigger> {{ getSelectedsInfo() }} </mat-select-trigger>
     <div class="select-container">
-    <mat-optgroup >
-  <mat-form-field style="width:100%;">
-    <input #search autocomplete="off" [placeholder]="config.inputSearch" aria-label="Search" matInput [formControl]="searchTextboxControl" 
-      (keydown)="handleInput($event)">
-    <button [disableRipple]="true" *ngIf="search.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event)">
-    <mat-icon >close</mat-icon>
-  </button>
-         </mat-form-field>
-    </mat-optgroup>
-    <mat-optgroup *ngIf="(filteredOptions | async).length == 0">
-      <div>{{ config.notFound }}</div>
-    </mat-optgroup>
- <mat-option (onSelectionChange)="selectionChange($event)" *ngFor="let option of filteredOptions | async" [value]="option">
+      <mat-optgroup>
+        <mat-form-field style="width: 100%">
+          <input
+            #search
+            autocomplete="off"
+            [placeholder]="config.inputSearch"
+            aria-label="Search"
+            matInput
+            [formControl]="searchTextboxControl"
+            (keydown)="handleInput($event)"
+          />
+          <button
+            [disableRipple]="true"
+            *ngIf="search.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="clearSearch($event)"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </mat-optgroup>
+      <mat-optgroup *ngIf="(filteredOptions | async).length == 0">
+        <div>{{ config.notFound }}</div>
+      </mat-optgroup>
+      <mat-option
+        (onSelectionChange)="selectionChange($event)"
+        *ngFor="let option of filteredOptions | async"
+        [value]="option"
+      >
         {{option.name}}
       </mat-option>
-</div>
-</mat-select>
+    </div>
+  </mat-select>
 </mat-form-field>
