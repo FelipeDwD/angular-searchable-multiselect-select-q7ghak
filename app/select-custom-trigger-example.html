@@ -6,7 +6,8 @@
     <div class="select-container">
     <mat-optgroup >
   <mat-form-field style="width:100%;">
-    <input #search autocomplete="off" [placeholder]="config.inputSearch" aria-label="Search" matInput [formControl]="searchTextboxControl">
+    <input #search autocomplete="off" [placeholder]="config.inputSearch" aria-label="Search" matInput [formControl]="searchTextboxControl" 
+      (keydown)="handleInput($event)">
     <button [disableRipple]="true" *ngIf="search.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event)">
     <mat-icon >close</mat-icon>
   </button>
