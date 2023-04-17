@@ -28,23 +28,16 @@ export class SelectCustomTriggerExample {
 
   filteredOptions: Observable<any[]>;
 
-  ngOnInit() {
-    /**
-     * Set filter event based on value changes 
-     */
+  ngOnInit() {    
     this.filteredOptions = this.searchTextboxControl.valueChanges
       .pipe(
         startWith<string>(''),
         map(name => this._filter(name))
       );
   }
-
-  /**
-   * Used to filter data based on search input 
-   */
+  
   private _filter(name: string): String[] {
-    const filterValue = name.toLowerCase();
-    // Set selected values to retain the selected checkbox state 
+    const filterValue = name.toLowerCase();    
     this.setSelectedValues();
     this.selectFormControl.patchValue(this.selectedValues);
     let filteredList = this.data.filter(option => option.name.toLowerCase().includes(filterValue) ||
@@ -94,26 +87,18 @@ export class SelectCustomTriggerExample {
   }
 }
 
-  openedChange(e) {
-    // Set search textbox value as empty while opening selectbox 
-    this.searchTextboxControl.patchValue('');
-    // Focus to search textbox while clicking on selectbox
+  openedChange(e) {    
+    this.searchTextboxControl.patchValue('');    
     if (e == true) {
       this.searchTextBox.nativeElement.focus();
     }
   }
-
-  /**
-   * Clearing search textbox value 
-   */
+  
   clearSearch(event) {
     event.stopPropagation();
     this.searchTextboxControl.patchValue('');
   }
-
-  /**
-   * Set selected values to retain the state 
-   */
+  
   setSelectedValues() {
     console.log('selectFormControl', this.selectFormControl.value);
     if (this.selectFormControl.value && this.selectFormControl.value.length > 0) {
@@ -125,6 +110,3 @@ export class SelectCustomTriggerExample {
     }
   }
 }
-/**  Copyright 2018 Google Inc. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at http://angular.io/license */
