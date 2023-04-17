@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatSelect } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -12,18 +13,18 @@ import { map, startWith } from 'rxjs/operators';
 export class SelectCustomTriggerExample {
 
   @ViewChild('search') searchTextBox: ElementRef;
+  @ViewChild('mySel') skillSel: MatSelect;
 
   selectFormControl = new FormControl();
   searchTextboxControl = new FormControl();
   selectedValues = [];
-  data: any[] = [
-    {id: 1, name: '2CONTA CONTABILIDADE - 37.901.542/0001-45', doc: '37901542000145'},
-    {id: 2, name: '2E PRODUCOES E EVENTOS - 19.856.085/0001-32', doc: '19856085000132'},
-    {id: 3, name: '360I GROUP - 12.693.759/0001-11', doc: '12693759000111'},
-    {id: 4, name: '3A SERVICOS LTDA - 13.642.403/0001-86', doc: '13642403000186'},
-    {id: 5, name: '3D GESTAO - 36.442.860/0001-22', doc: '36442860000122'},
-    {id: 6, name: '3J CONSULTORIA - 12.908.862/0001-04', doc: '12908862000104'},    
-  ]
+  selectAll: boolean
+  data = [
+    { id: 0, name: 'SELECIONAR TODAS' },
+    { id: 1, name: 'Hotel Hangar' },
+    { id: 2, name: 'Hotel Floph' },
+    { id: 3, name: 'Novo Vernon Hotel' }
+];
 
   filteredOptions: Observable<any[]>;
 
@@ -51,15 +52,47 @@ export class SelectCustomTriggerExample {
     return filteredList;
   }
 
-/**
- * Remove from selected values based on uncheck
- */
-  selectionChange(event) {
-    if (event.isUserInput && event.source.selected == false) {
-      let index = this.selectedValues.indexOf(event.source.value);
-      this.selectedValues.splice(index, 1)
-    }
+  getSelectedsInfo() {
+    if (this.selectAll || this.selectedValues.length == this.data.length - 1)
+        return 'Todos Selecionados';
+    if (this.selectedValues.length == 1)
+        return this.selectedValues[0].name;
+    if (this.selectedValues.length >= 1)
+        return `${this.selectedValues[0].name} +${this.selectedValues.length - 1}`;
+}
+
+ selectionChange(event) {
+  if (!event.isUserInput)
+      return;
+  let id = event.source.value.id;
+  if (id == 0) {
+      if (!this.selectAll) {
+          this.selectAll = true;
+          this.selectedValues = [];
+          this.selectedValues.push(...this.data.filter(x => x.id != 0));
+          this.skillSel.options.forEach((item) => item.select());
+      }
+      else {
+          this.selectAll = false;
+          this.selectedValues = [];
+          this.skillSel.options.forEach((item) => { item.deselect(); });
+      }
+      return;
   }
+  let indexList = this.selectedValues.indexOf(event.source.value);
+  if (indexList == -1)
+      this.selectedValues.push(event.source.value);
+  else
+      this.selectedValues.splice(indexList, 1);
+  if (this.selectedValues.filter(x => x.id != 0).length == this.data.length - 1) {
+      this.skillSel.options.first.select();
+      this.selectAll = true;
+  }
+  else {
+      this.selectAll = false;
+      this.skillSel.options.first.deselect();
+  }
+}
 
   openedChange(e) {
     // Set search textbox value as empty while opening selectbox 

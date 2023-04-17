@@ -1,10 +1,7 @@
 <mat-form-field style="min-width: 500px">
-	<mat-select (openedChange)="openedChange($event)" placeholder="Selecionar parceiro(s)" [formControl]="selectFormControl" multiple>
+	<mat-select #mySel (openedChange)="openedChange($event)" placeholder="Selecionar parceiro(s)" [formControl]="selectFormControl" multiple>
 		<mat-select-trigger>
-			{{selectFormControl.value ? selectFormControl.value[0] : ''}}
-			<span *ngIf="selectFormControl.value?.length > 1" class="additional-selection">
-        (+{{selectFormControl.value.length - 1}} {{selectFormControl.value?.length === 2 ? 'other' : 'others'}})
-      </span>
+			 {{ getSelectedsInfo() }}			
     </mat-select-trigger>
     <div class="select-container">
     <mat-optgroup >
